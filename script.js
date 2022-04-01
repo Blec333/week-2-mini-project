@@ -23,6 +23,7 @@ guessing-section.addEventListener("click", function() {
       }, 1000);
     }
     
+    
     // function sendMessage() {
     //   timeEl.textContent = " ";
     //   var imgEl = document.createElement("img");
