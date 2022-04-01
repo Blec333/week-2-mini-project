@@ -4,49 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/reset.css">
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Document</title>
 </head>
 <body>
     <main>
-        <h1>GUESS THE WORD!!!</h1>
-    
-        <section id="timer">
-            <h1 class="time" style="text-align:center;"></h1>
-    
-    
+        <h1 style="text-align:center;">GUESS THE WORD!!!</h1>
+        <section id="timer" class="top-container">
+            <h1 class="time" style="text-align:center;">0</h1>
         </section>
     
-        <div>
-            <section id="word">
-    
+
+        <section class="bottom-container">
+            <section id="word" class="guessing-sections">
                 <h1>What could it be?</h1>
-                <div class="container">
-                  <div class="box" data-number="1" data-state="hidden"></div>
-                  <div class="box" data-number="2" data-state="hidden"></div>
-                  <div class="box" data-number="3" data-state="hidden"></div>
-                  <div class="box" data-number="4" data-state="hidden"></div>
-                  <div class="box" data-number="5" data-state="hidden"></div>
-                  <div class="box" data-number="6" data-state="hidden"></div>
+                <div class="letters-container">
+                  <span class="letter" data-number="1" data-state="hidden">a</span>
+                  <span class="letter" data-number="2" data-state="hidden">b</span>
+                  <span class="letter" data-number="3" data-state="hidden">c</span>
+                  <span class="letter" data-number="4" data-state="hidden">d</span>
+                  <span class="letter" data-number="5" data-state="hidden">e</span>
+                  <span class="letter" data-number="6" data-state="hidden">f</span>
               
     
-            </section>
+                </section>
     
-            <section id="guess">
-    
+            <section id="guess" class="guessing-sections">
                 <div class="card">
                     <h1>Guess Here!</h1>
                     <form id="guess-form" method="POST">
-                        <label for="guess-text">Add a Todo: </label>
+                        <label for="guess-text">Guess the word: </label>
                         <input type="text" placeholder="I'm thinking the word is..." name="guess-text" id="guess-text" />
                     </form>
                     <!-- <p>Todo Count: <span id="todo-count">0</span></p> -->
                     <!-- <ul id="guess-list"></ul> -->
-    
                 </div>
-    
             </section>
-        </div>
+        </section>
     
     
     
@@ -61,6 +56,6 @@
     
     
     </main>
-    <script src="./asets/js/script.js"></script>
+    <script src="./assets/js/script.js"></script>
 </body>
 </html>
