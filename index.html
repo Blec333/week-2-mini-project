@@ -10,52 +10,57 @@
 </head>
 <body>
     <main>
-        <h1 style="text-align:center;">GUESS THE WORD!!!</h1>
+        <h1 style="text-align:center;">Can you guess the word?</h1>
+        <br>
+        <div id="stats-container">
+            <span>Wins= </span><span id="win-value"></span>
+            <button id="click-to-play">Click to Play</button>
+            <span>Losses= </span><span id="loss-value"></span>
+        </div>
         <section id="timer" class="top-container">
             <h1 class="time" style="text-align:center;">0</h1>
         </section>
-    
+
 
         <section class="bottom-container">
             <section id="word" class="guessing-sections">
-                <h1>What could it be?</h1>
                 <div class="letters-container">
-                  <span class="letter" data-number="1" data-state="hidden">a</span>
-                  <span class="letter" data-number="2" data-state="hidden">b</span>
-                  <span class="letter" data-number="3" data-state="hidden">c</span>
-                  <span class="letter" data-number="4" data-state="hidden">d</span>
-                  <span class="letter" data-number="5" data-state="hidden">e</span>
-                  <span class="letter" data-number="6" data-state="hidden">f</span>
-              
-    
-                </section>
-    
+                    <span class="letter" data-number="1" data-state="hidden">_</span>
+                    <span class="letter" data-number="2" data-state="hidden">_</span>
+                    <span class="letter" data-number="3" data-state="hidden">_</span>
+                    <span class="letter" data-number="4" data-state="hidden">_</span>
+                    <span class="letter" data-number="5" data-state="hidden">_</span>
+                    <span class="letter" data-number="6" data-state="hidden">_</span>
+
+
+            </section>
+
             <section id="guess" class="guessing-sections">
                 <div class="card">
-                    <h1>Guess Here!</h1>
                     <form id="guess-form" method="POST">
-                        <label for="guess-text">Guess the word: </label>
-                        <input type="text" placeholder="I'm thinking the word is..." name="guess-text" id="guess-text" />
+                        <label for="guess-text"></label>
+                        <input type="text" maxlength="6" style="text-align:center;"
+                            placeholder="I'm thinking the word is..." name="guess-text" id="guess-text" />
+                        <button id="commit-guess">Submit</button>
                     </form>
-                    <!-- <p>Todo Count: <span id="todo-count">0</span></p> -->
-                    <!-- <ul id="guess-list"></ul> -->
                 </div>
             </section>
         </section>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
     </main>
     <script src="./assets/js/script.js"></script>
 </body>
+
 </html>

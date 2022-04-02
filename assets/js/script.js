@@ -1,143 +1,103 @@
-// The completed application should meet the following criteria:
-
-// As a user, I want to start the game by clicking on a button.
-
-// As a user, I want to try and guess a word by filling in a number of blanks that match the number of letters in that word.
-
-// As a user, I want the game to be timed.
-
-// As a user, I want to win the game when I have guessed all the letters in the word.
-
-// As a user, I want to lose the game when the timer runs out before I have guessed all the letters.
-
-// As a user, I want to see my total wins and losses on the screen.
-
-// Specifications
-// When a user presses a letter key, the user's guess should be captured as a key event.
-
-// When a user correctly guesses a letter, the corresponding blank "_" should be replaced by the letter. For example, if the user correctly selects "a", then "a _ _ a _" should appear.
-
-// When a user wins or loses a game, a message should appear and the timer should stop.
-
-// When a user clicks the start button, the timer should reset.
-
-// When a user refreshes or returns to the brower page, the win and loss counts should persist.
 
 
-//Timer function and variables here
 
-// Selects element by class
-//We store the interval in a variable. This is an important step, so that we can get the interval to stop. 
 var timeEl = document.querySelector(".time");
-
-// Selects element by id
-var mainEl = document.getElementById("main");
-
-var secondsLeft = 11;
-
-function setTime() {
-  // Sets interval in variable
-  //The setInterval() method takes a function as its first argument
-  var timerInterval = setInterval(function() {
-    //The function is the action that we want to be evaluated at each interval. This function prints a message at each interval
-    secondsLeft--;
-    timeEl.textContent = secondsLeft + " seconds left till colorsplosion.";
-
-    if(secondsLeft === 0) {
-      // Stops execution of action at set interval
-      //When the countdown reaches zero, we want the action to stop. The clearInterval() method stops the execution of the interval. It takes one parameter: the variable name assigned to the interval
-      clearInterval(timerInterval);
-      // Calls function to create and append image
-      sendMessage();
-    }
-    //The second argument that the setInterval() method takes is the interval. Because intervals use milliseconds, we use 1000 to create an interval of one second
-  }, 1000);
-}
-
-// Function to create and append colorsplosion image
-//We call sendMessage() after the interval is cleared, so the image will pop up after the countdown is complete. The sendMessage function creates and appends the image to the document
-function sendMessage() {
-  timeEl.textContent = " ";
-  var imgEl = document.createElement("img");
-  imgEl.setAttribute("src", "images/image_1.jpg");
-  mainEl.appendChild(imgEl);
-
-}
-
-setTime();
+var timerInterval;
+var isEnterKey;
+var guessedWord;
+var hiddenWord;
+var secondsLeft;
+var visibleLetterCount = 0;
+var wins = 0;
+var losses = 0;
+var playButton = document.querySelector("#click-to-play");
+var lettersContainer = document.querySelector(".letters-container");
+var guessText = document.querySelector("#guess-text");
+var submitButton = document.querySelector("#commit-guess");
+var lossesValue = document.querySelector("#loss-value");
+var winsValue = document.querySelector("#win-value");
 
 
-//word / letters to appear go here
-var container = document.querySelector(".container");
-
-container.addEventListener("click", function(event) {
-  var element = event.target;
-
-  // TODO: Complete function
-  if(element.matches(".box")) {
-    var state = element.getAttribute("data-state");
-
-    if (state === "hidden") {
-      element.textContent = element.getAttribute("data-number");
-      element.setAttribute("data-state", "visible");
-    } else {
-      element.textContent = "";
-      element.setAttribute("data-state", "hidden");
+function scoreCard() {
+  if (localStorage.getItem("wins") > 0 || localStorage.getItem("losses") > 0) {
+    if (confirm("Would you like to load your scorecard?")) {
+      wins = localStorage.getItem("wins");
+      winsValue.textContent = wins;
+      losses = localStorage.getItem("losses");
+      lossesValue.textContent = losses;
     }
   }
-});
-
-
-//text box for the user's guesses goes here
-
+}
+scoreCard();
 
 
 
+document.addEventListener("keydown", function (event) {
+  if (event.key.toUpperCase() === "ENTER") {
+    guessText.textContent = "";
+  }
+}
+);
 
 
+var arrayOfWords = ["kettle", "settle", "create", "timber", "buffet", "lesson", "devote", "wonder", "summit", "mosque", "normal", "winner", "market", "harbor", "unfair", "report", "border", "pastel", "battle", "credit", "clique", "height", "sector", "marble", "season", "notion", "coffee", "proper", "tactic", "twitch", "define", "father", "expose", "sleeve", "repeat", "efflux", "random", "prayer", "wander", "admire", "ribbon", "breeze", "bullet", "belong", "retire", "ethics", "morale", "threat", "deadly", "squash", "exempt", "scream", "retain", "galaxy", "matrix", "active", "vacuum", "switch", "horror", "collar", "vision", "tenant", "studio", "pillow", "driver", "danger", "deputy", "theory", "filter", "manage", "facade", "impact", "extort", "suffer", "bishop", "spider", "reader", "census", "corner", "chance", "monkey", "sticky", "budget", "insist", "worker", "choose", "letter", "silver", "hammer", "injury", "needle", "school", "behead", "drawer", "annual", "ignite", "career", "afford", "dollar", "advice", "virtue", "ethnic", "valley", "appeal", "engine", "assume", "infect", "bucket", "burial", "canvas", "colony", "method", "cheque", "direct", "helmet", "artist", "instal", "sample", "remind", "planet", "mirror", "arrest", "immune", "velvet", "agenda", "depend", "accept", "stream", "aspect", "follow", "hiccup", "summer", "update", "unrest", "memory", "subway", "detail", "cinema", "profit", "polish", "decide", "differ", "relate", "stride", "bloody", "matter", "leader", "appear", "acquit", "broken", "affair", "single", "latest", "number", "palace", "action", "sacred", "safari", "shiver", "linear", "gravel", "island", "refuse", "suntan", "review", "string", "margin", "volume", "social", "rocket", "coerce", "pepper", "trance", "tumble", "branch", "degree", "kidney", "shorts", "parade", "exceed", "expect", "remark", "sphere", "forest", "cattle", "ensure", "ignore", "Europe", "resist", "insure", "length", "lonely", "mother", "polite", "marine", "defend", "animal", "absent", "slogan", "resort", "agency", "cancer", "second", "escape", "divide", "gallon", "cousin", "packet", "flight", "cherry", "master", "barrel", "rotate", "common", "throat", "glance", "linger", "please", "empire", "treaty", "nuance", "harass", "ballet", "tissue", "castle", "kidnap", "sermon", "porter", "viable", "borrow", "chorus", "church", "return", "offend", "sister", "senior", "double", "resign", "grudge", "banner", "manner", "occupy", "safety", "mutual", "answer", "forbid", "pardon", "ladder", "banana", "ground", "revive", "hotdog", "stitch", "prefer", "tablet", "desert", "poetry", "honest", "debate", "cellar", "speech", "remain", "bridge", "bundle", "reform", "gossip", "offset", "layout", "rhythm", "regret", "excuse", "cereal", "revise", "relief", "tumour", "guitar", "reject", "quaint", "corpse", "useful", "behave", "makeup", "charge", "stable", "figure", "heroin", "thanks", "rotten", "elapse", "closed", "patent", "ballot", "heaven", "moving", "fossil", "health", "finish", "carbon", "rabbit", "peanut", "jockey", "sketch", "thread", "object", "flavor", "window", "suburb", "affect", "effort", "format", "embark", "reduce", "junior", "betray", "locate", "course", "thrust", "expand", "doctor", "output", "attack", "garlic", "cotton", "native", "bottom", "critic", "formal", "misery", "vessel", "crouch", "sodium", "indoor", "family", "screen", "desire", "writer", "couple", "bitter", "estate", "trench", "favour", "belief", "mobile", "flower", "foster", "weapon", "morsel", "square", "turkey", "adjust", "poison", "dealer", "crisis", "global", "button", "spring", "outlet", "scheme", "effect", "listen", "weight", "friend", "embryo", "demand", "origin", "future", "employ", "cancel", "center", "revoke", "middle", "system", "happen", "public", "ritual", "pledge"];
 
 
-
-// As a user, I want to start the game by clicking on a button.
-var start = document.querySelector(".guessing-section");
-var container = document.querySelector(".container");
-var mode = "";
-
-guessing-section.addEventListener("click", function() {
-  
-  if (mode == "start") {
-    var timeEl = document.querySelector(".time");
-    var mainEl = document.getElementById("main");
-    
-    var secondsLeft = 11;
-    
-    function setTime() {
-      var timerInterval = setInterval(function() {
-        secondsLeft--;
-        timeEl.textContent = secondsLeft + " you lose.";
-    
-        // //if(secondsLeft === 0) {
-        //   clearInterval(timerInterval);
-        //   sendMessage();//
-        
-      }, 1000);
+playButton.addEventListener("click", function () {
+  clearInterval(timerInterval);
+  hiddenWord = arrayOfWords.at(Math.floor(Math.random() * arrayOfWords.length)).toUpperCase();
+  console.log(hiddenWord);
+  for (i = 0; i < hiddenWord.length; i++) {
+    lettersContainer.children[i].textContent = "_";
+    lettersContainer.children[i].setAttribute("data-state", "hidden");
+    visibleLetterCount = 0;
+  }
+  secondsLeft = 300;
+  timerInterval = setInterval(function () {
+    secondsLeft--;
+    timeEl.textContent = secondsLeft + " seconds left to guess!.";
+    if (secondsLeft === 0) {
+      clearInterval(timerInterval);
+      losses++;
+      localStorage.setItem("losses", losses);
+      timeEl.textContent = "Oh no! Out of time...";
     }
-    
-    
-    // function sendMessage() {
-    //   timeEl.textContent = " ";
-    //   var imgEl = document.createElement("img");
-    //   imgEl.setAttribute("src", "images/image_1.jpg");
-    //   mainEl.appendChild(imgEl);
-    
+  }, 1000);
+}
+);
+
+submitButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  var guessedWord = guessText.value.toUpperCase();
+  guessText.textContent = "";
+  if (secondsLeft > 0 && visibleLetterCount < 6) {
+    for (i = 0; i < hiddenWord.length; i++) {
+      var state = lettersContainer.children[i].getAttribute("data-state");
+      if (hiddenWord.charAt(i) === guessedWord.charAt(i) && state === "hidden") {
+        lettersContainer.children[i].textContent = hiddenWord[i];
+        lettersContainer.children[i].setAttribute("data-state", "visible");
+        visibleLetterCount = visibleLetterCount + 1
+      } else {
+        lettersContainer.children[i].setAttribute("data-state", "hidden");
+      }
     }
-    // When a user clicks the start button, the timer should reset.
-    setTime();
-   
-// As a user, I want to try and guess a word by filling in a number of blanks that match the number of letters in that word.// When a user presses a letter key, the user's guess should be captured as a key event.// When a user correctly guesses a letter, the corresponding blank "_" should be replaced by the letter. For example, if the user correctly selects "a", then "a _ _ a _" should appear. compare input to stored array
+    if (visibleLetterCount === 6) {
+      wins++;
+      winsValue.textContent = wins;
+      clearInterval(timerInterval);
+      timeEl.textContent = "WIN WIN WIN!";
+      guessText.textContent = "";
+      localStorage.setItem("wins", wins);
+    } else if (secondsLeft === 0 && visibleLetterCount < 6) {
+      losses++;
+      lossesValue.textContent = losses;
+      clearInterval(timerInterval);
+      timeEl.textContent = "Oh no! Out of time...";
+      guessText.textContent = "";
+    }
+  }
+}
+);
 
-// As a user, I want to win the game when I have guessed all the letters in the word.// When a user wins or loses a game, a message should appear and the timer should stop. if true return winner
 
-// As a user, I want to lose the game when the timer runs out before I have guessed all the letters. compare input with array and amount === with stored array === timer>0 to stored array
 
-// As a user, I want to see my total wins and losses on the screen. // When a user refreshes or returns to the brower page, the win and loss counts should persist.stored array display
